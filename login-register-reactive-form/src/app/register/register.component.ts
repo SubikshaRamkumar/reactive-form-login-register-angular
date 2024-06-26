@@ -8,7 +8,8 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../_service/auth.service';
+import { AuthService } from '../_service/authenticationService/auth.service';
+import { FormValidationServiceService } from '../_service/formValidation/form-validation-service.service';
 
 @Component({
   selector: 'app-register',
@@ -20,7 +21,11 @@ import { AuthService } from '../_service/auth.service';
 export class RegisterComponent implements OnInit {
   formdata: FormGroup;
   submit = false;
-  constructor(private auth: AuthService) {
+  validationErrorMessage = '';
+  constructor(
+    private auth: AuthService,
+    private validationService: FormValidationServiceService
+  ) {
     this.formdata = new FormGroup({
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -69,5 +74,8 @@ export class RegisterComponent implements OnInit {
         this.loading = false;
         // console.log('Register completed');
       });
+  }
+  getErrorMessage(control: string) {
+    return this.validationService.getErrorMessage(control, this);
   }
 }

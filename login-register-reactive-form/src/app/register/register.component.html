@@ -28,8 +28,11 @@
                   formdata.controls['name'].dirty)
               "
             >
-              <span *ngIf="formdata.controls['name'].errors?.['required']">
-                Name is required.
+              <!-- <span *ngIf="formdata.controls['name'].errors?.['required']">
+              Name is required.
+            </span> -->
+              <span *ngIf="getErrorMessage('name') as validationErrorMessage">
+                {{ validationErrorMessage }}
               </span>
             </div>
           </div>
@@ -51,11 +54,14 @@
                   formdata.controls['email'].dirty)
               "
             >
-              <span *ngIf="formdata.controls['email']?.errors?.['required']">
+              <!-- <span *ngIf="formdata.controls['email']?.errors?.['required']">
                 Email is required.
               </span>
               <span *ngIf="formdata.controls['email']?.errors?.['email']">
                 Please enter valid email
+              </span> -->
+              <span *ngIf="getErrorMessage('email') as validationErrorMessage">
+                {{ validationErrorMessage }}
               </span>
             </div>
           </div>
@@ -78,11 +84,16 @@
                   formdata.controls['password'].dirty)
               "
             >
-              <span *ngIf="formdata.controls['password'].errors?.['required']">
+              <!-- <span *ngIf="formdata.controls['password'].errors?.['required']">
                 Password is required.
               </span>
               <span *ngIf="formdata.controls['password'].errors?.['minlength']">
                 MinLength of password must be 8 charcaters
+              </span> -->
+              <span
+                *ngIf="getErrorMessage('password') as validationErrorMessage"
+              >
+                {{ validationErrorMessage }}
               </span>
             </div>
           </div>

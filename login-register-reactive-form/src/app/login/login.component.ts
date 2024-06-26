@@ -8,7 +8,8 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../_service/auth.service';
+import { AuthService } from '../_service/authenticationService/auth.service';
+import { FormValidationServiceService } from '../_service/formValidation/form-validation-service.service';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,10 @@ import { AuthService } from '../_service/auth.service';
 })
 export class LoginComponent implements OnInit {
   formdata: FormGroup;
-  constructor(private auth: AuthService) {
+  constructor(
+    private auth: AuthService,
+    private validationService: FormValidationServiceService
+  ) {
     this.formdata = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
@@ -59,5 +63,8 @@ export class LoginComponent implements OnInit {
         this.loading = false;
         // console.log('login successful');
       });
+  }
+  getErrorMessage(control: string) {
+    return this.validationService.getErrorMessage(control, this);
   }
 }
