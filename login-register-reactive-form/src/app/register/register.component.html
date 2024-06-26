@@ -7,9 +7,8 @@
         <form
           class="register-form"
           action=""
-          #f="ngForm"
-          novalidate
-          (ngSubmit)="f.form.valid && onSubmit()"
+          [formGroup]="formdata"
+          (ngSubmit)="this.formdata.valid && onSubmit()"
         >
           <div class="form-group">
             <label for="exampleInputEmail1" class="text-uppercase">Name</label>
@@ -18,16 +17,21 @@
               type="text"
               class="form-control"
               name="name"
-              [(ngModel)]="formdata.name"
-              #name="ngModel"
-              required
+              formControlName="name"
             />
-            <span
+            <div
               class="text-danger"
-              *ngIf="this.submit && name.errors?.['required']"
+              *ngIf="
+                formdata.controls['name'].invalid &&
+                (this.submit ||
+                  formdata.controls['name'].touched ||
+                  formdata.controls['name'].dirty)
+              "
             >
-              Name is required.
-            </span>
+              <span *ngIf="formdata.controls['name'].errors?.['required']">
+                Name is required.
+              </span>
+            </div>
           </div>
           <div class="form-group">
             <label for="exampleInputEmail1" class="text-uppercase">Email</label>
@@ -36,16 +40,24 @@
               type="text"
               class="form-control"
               name="email"
-              [(ngModel)]="formdata.email"
-              #email="ngModel"
-              required
+              formControlName="email"
             />
-            <span
+            <div
               class="text-danger"
-              *ngIf="this.submit && email.errors?.['required']"
+              *ngIf="
+                formdata.controls['email'].invalid &&
+                (this.submit ||
+                  formdata.controls['email'].touched ||
+                  formdata.controls['email'].dirty)
+              "
             >
-              Email is required.
-            </span>
+              <span *ngIf="formdata.controls['email']?.errors?.['required']">
+                Email is required.
+              </span>
+              <span *ngIf="formdata.controls['email']?.errors?.['email']">
+                Please enter valid email
+              </span>
+            </div>
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1" class="text-uppercase"
@@ -55,23 +67,24 @@
               class="form-control"
               type="password"
               name="password"
-              [(ngModel)]="formdata.password"
-              #password="ngModel"
-              required
-              minlength="8"
+              formControlName="password"
             />
-            <span
+            <div
               class="text-danger"
-              *ngIf="this.submit && password.errors?.['required']"
+              *ngIf="
+                formdata.controls['password'].invalid &&
+                (this.submit ||
+                  formdata.controls['password'].touched ||
+                  formdata.controls['password'].dirty)
+              "
             >
-              Password is required.
-            </span>
-            <span
-              class="text-danger"
-              *ngIf="this.submit && password.errors?.['minlength']"
-            >
-              MinLength of password must be 8 charcaters
-            </span>
+              <span *ngIf="formdata.controls['password'].errors?.['required']">
+                Password is required.
+              </span>
+              <span *ngIf="formdata.controls['password'].errors?.['minlength']">
+                MinLength of password must be 8 charcaters
+              </span>
+            </div>
           </div>
           <div class="form-group">
             <span class="text-danger" *ngIf="this.errorMessage">
@@ -87,7 +100,7 @@
               type="submit"
               class="btn btn-login float-right"
               value="Register"
-              (click)="submit = true"
+              (click)="this.submit = true"
               [disabled]="this.loading"
             />
           </div>

@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../_service/auth.service';
@@ -8,34 +13,38 @@ import { AuthService } from '../_service/auth.service';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [NavbarComponent, FormsModule, CommonModule, RouterLink],
+  imports: [NavbarComponent, ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
 export class RegisterComponent implements OnInit {
+  formdata: FormGroup;
   submit = false;
-  formdata = { name: '', email: '', password: '' };
+  constructor(private auth: AuthService) {
+    this.formdata = new FormGroup({
+      name: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(8),
+      ]),
+    });
+  }
   errorMessage = '';
   loading = false;
-  constructor(private auth: AuthService) {}
   ngOnInit(): void {
     this.auth.canAuthenticate();
   }
   onSubmit() {
-    // console.log(this.formdata);
     this.loading = true;
     // call register service
 
-    // console.log(
-    //   this.auth.register(
-    //     this.formdata.name,
-    //     this.formdata.email,
-    //     this.formdata.password
-    //   )
-    // );
+    const name = this.formdata.get('name')?.value;
+    const email = this.formdata.get('email')?.value;
+    const password = this.formdata.get('password')?.value;
 
     this.auth
-      .register(this.formdata.name, this.formdata.email, this.formdata.password)
+      .register(name, email, password)
       .subscribe({
         // successful register - next function parameter . if not error function paramater
         next: (data) => {

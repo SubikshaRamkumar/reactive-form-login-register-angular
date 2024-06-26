@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../_service/auth.service';
@@ -8,16 +13,22 @@ import { AuthService } from '../_service/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NavbarComponent, FormsModule, CommonModule, RouterLink],
+  imports: [NavbarComponent, ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
-  formdata = { email: '', password: '' };
+  formdata: FormGroup;
+  constructor(private auth: AuthService) {
+    this.formdata = new FormGroup({
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required]),
+    });
+  }
+
   submit = false;
   loading = false;
   errorMessage = '';
-  constructor(private auth: AuthService) {}
   ngOnInit(): void {
     this.auth.canAuthenticate();
   }
@@ -25,8 +36,10 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     // console.log(this.formdata);
     // call login service
+    const email = this.formdata.get('email')?.value;
+    const password = this.formdata.get('password')?.value;
     this.auth
-      .login(this.formdata.email, this.formdata.password)
+      .login(email, password)
       .subscribe({
         next: (data) => {
           this.auth.storeToken(data.idToken);
