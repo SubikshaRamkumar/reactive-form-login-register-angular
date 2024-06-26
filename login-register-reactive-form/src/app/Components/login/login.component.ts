@@ -8,8 +8,8 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../_service/authenticationService/auth.service';
-import { FormValidationServiceService } from '../_service/formValidation/form-validation-service.service';
+import { AuthService } from '../../_service/authenticationService/auth.service';
+import { FormValidationServiceService } from '../../_service/formValidation/form-validation-service.service';
 
 @Component({
   selector: 'app-login',
