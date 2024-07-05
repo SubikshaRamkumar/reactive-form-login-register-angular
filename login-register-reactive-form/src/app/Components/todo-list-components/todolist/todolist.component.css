@@ -1,0 +1,13 @@
+.todolist-block {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr;
+}
+h4 {
+  text-align: center;
+  margin: 30px 0;
+}
+@media (max-width: 700px) {
+  .todolist-block {
+    display: block;
+  }
+}

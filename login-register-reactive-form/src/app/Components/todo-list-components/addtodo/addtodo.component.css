@@ -1,0 +1,25 @@
+.add-container {
+  padding: 30px 30px;
+}
+label {
+  display: block;
+  margin-bottom: 1rem;
+}
+input {
+  width: 100%;
+  outline: none;
+}
+.input-field {
+  padding: 2px 10px;
+}
+button {
+  margin-top: 20px;
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 5px;
+}
+button:hover {
+  background-color: #000000c2;
+  color: #fff;
+}

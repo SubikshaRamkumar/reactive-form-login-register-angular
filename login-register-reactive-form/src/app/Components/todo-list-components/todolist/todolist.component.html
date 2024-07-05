@@ -1,0 +1,16 @@
+<app-navbar></app-navbar>
+<div class="todolist-block">
+  <div class="add-todo">
+    <h4>Add your todos here</h4>
+    <app-addtodo (todoAdded)="addTodo($event)"></app-addtodo>
+  </div>
+  <div class="list-items">
+    <h4>Your Todos</h4>
+    <app-list-items
+      [user]="user"
+      (todoIndex)="deleteIndex($event)"
+      (todoCheck)="checkTodo($event)"
+    >
+    </app-list-items>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../service/authentication-service/auth.service';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { AuthService } from '../../_service/authenticationService/auth.service';
 
 @Component({
   selector: 'app-dashboard',

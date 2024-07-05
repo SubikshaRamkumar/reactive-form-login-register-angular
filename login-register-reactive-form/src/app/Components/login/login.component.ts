@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import {
   FormControl,
@@ -8,8 +8,10 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../_service/authenticationService/auth.service';
-import { FormValidationServiceService } from '../../_service/formValidation/form-validation-service.service';
+import { AuthService } from '../../service/authentication-service/auth.service';
+import { FormValidationServiceService } from '../../service/form-validation/form-validation-service.service';
+import { DataService } from '../../service/data.service';
+import { UserData } from '../../models/users';
 
 @Component({
   selector: 'app-login',
@@ -20,12 +22,19 @@ import { FormValidationServiceService } from '../../_service/formValidation/form
 })
 export class LoginComponent implements OnInit {
   formdata: FormGroup;
+  user: UserData = { userId: '', todos: [] };
+  dataService: DataService = inject(DataService);
   constructor(
     private auth: AuthService,
-    private validationService: FormValidationServiceService
+    private validationService: FormValidationServiceService // private dataService: DataService
   ) {
+    console.log('login instance created');
     this.formdata = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+        validationService.customEmailValidator(),
+      ]),
       password: new FormControl('', [Validators.required]),
     });
   }
@@ -34,6 +43,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   errorMessage = '';
   ngOnInit(): void {
+    console.log('LoginComponent ngOnInit called');
     this.auth.canAuthenticate();
   }
   onSubmit() {
@@ -49,6 +59,14 @@ export class LoginComponent implements OnInit {
           this.auth.storeToken(data.idToken);
           // console.log(data.idToken);
           this.auth.canAuthenticate();
+          this.auth.detail().subscribe({
+            next: (val) => {
+              console.log('login' + val.users[0].localId);
+              // this.dataService.raiseUserIdEmitter(val.users[0].localId);
+              // this.dataService.onrainseevent(val.users[0].localId);
+              this.dataService.setUserId(val.users[0].localId);
+            },
+          });
         },
         error: (data) => {
           // console.log(data.error);
@@ -58,6 +76,7 @@ export class LoginComponent implements OnInit {
             this.errorMessage = 'Unknown error when logging into this account';
           }
         },
+        // complete: () => {},
       })
       .add(() => {
         this.loading = false;

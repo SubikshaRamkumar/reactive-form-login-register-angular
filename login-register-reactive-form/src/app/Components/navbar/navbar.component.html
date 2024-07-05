@@ -31,10 +31,21 @@
       </ng-template>
       <ng-template #authenticated>
         <li class="nav-item">
+          <a class="nav-link" routerLink="/todolist">To Do List</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" routerLink="/dashboard">Dashboard</a>
         </li>
         <li>
-          <a class="nav-link cursor-pointer" (click)="logout()">Logout</a>
+          <a
+            class="nav-link"
+            tabindex="0"
+            role="button"
+            (click)="logout()"
+            (keydown.enter)="logout()"
+            >Logout</a
+          >
+          <!-- 40:11  error  Elements with interaction handlers must be focusable   so tabindex used  An <a> tag without an href attribute is not focusable by default in older browsers or in some cases, and adding tabindex="0" ensures it is focusable and can be navigated to using the keyboard. -->
         </li>
       </ng-template>
     </ul>

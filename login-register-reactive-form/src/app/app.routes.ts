@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './Components/home/home.component';
-import { LoginComponent } from './Components/login/login.component';
-import { RegisterComponent } from './Components/register/register.component';
-import { DashboardComponent } from './Components/dashboard/dashboard.component';
+import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { TodolistComponent } from './components/todo-list-components/todolist/todolist.component';
 
 export const routes: Routes = [
   {
@@ -20,5 +21,9 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+  },
+  {
+    path: 'todolist',
+    component: TodolistComponent,
   },
 ];

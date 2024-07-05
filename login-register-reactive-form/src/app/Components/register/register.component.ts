@@ -8,8 +8,10 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../_service/authenticationService/auth.service';
-import { FormValidationServiceService } from '../../_service/formValidation/form-validation-service.service';
+import { AuthService } from '../../service/authentication-service/auth.service';
+import { FormValidationServiceService } from '../../service/form-validation/form-validation-service.service';
+import { DataService } from '../../service/data.service';
+import { UserData } from '../../models/users';
 
 @Component({
   selector: 'app-register',
@@ -22,13 +24,19 @@ export class RegisterComponent implements OnInit {
   formdata: FormGroup;
   submit = false;
   validationErrorMessage = '';
+  user: UserData = { userId: '', todos: [] };
   constructor(
     private auth: AuthService,
-    private validationService: FormValidationServiceService
+    private validationService: FormValidationServiceService,
+    private dataService: DataService
   ) {
     this.formdata = new FormGroup({
       name: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+        validationService.customEmailValidator(),
+      ]),
       password: new FormControl('', [
         Validators.required,
         Validators.minLength(8),
@@ -51,12 +59,17 @@ export class RegisterComponent implements OnInit {
     this.auth
       .register(name, email, password)
       .subscribe({
-        // successful register - next function parameter . if not error function paramater
         next: (data) => {
-          // store token after successful registration
           this.auth.storeToken(data.idToken);
-          // console.log(data.idToken);
           this.auth.canAuthenticate();
+          this.auth.detail().subscribe({
+            next: (val) => {
+              console.log('login' + val.users[0].localId);
+              this.user.userId = val.users[0].localId;
+              this.dataService.addToUsers(this.user);
+              this.dataService.setUserId(val.users[0].localId);
+            },
+          });
         },
         error: (data) => {
           // console.log(data);
@@ -69,9 +82,11 @@ export class RegisterComponent implements OnInit {
               'Unknown error occured when creating an account';
           }
         },
+        // complete: () => {},
       })
       .add(() => {
         this.loading = false;
+
         // console.log('Register completed');
       });
   }

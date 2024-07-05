@@ -1,0 +1,7 @@
+<div class="add-container">
+  <div class="todo-input">
+    <div>Task to do</div>
+    <input type="text" class="input-field" #todoInput />
+  </div>
+  <button (click)="addTodo(todoInput.value); todoInput.value = ''">Add</button>
+</div>
